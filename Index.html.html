@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD Yahiya · premium portfolio</title>
+    <!-- Fonts & icons (no framework) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        /* ---------- RESET & VARIABLES ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b0c10;
+            color: #e5e9f0;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+            cursor: none; /* custom cursor */
+        }
+
+        /* custom cursor (premium) */
+        .custom-cursor {
+            width: 8px;
+            height: 8px;
+            background: #cf7bb5;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s, background 0.2s;
+            box-shadow: 0 0 15px #cf7bb5;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(207, 123, 181, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: 0.08s linear;
+        }
+
+        /* preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s visibility 0.8s;
+        }
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(207, 123, 181, 0.2);
+            border-top-color: #cf7bb5;
+            border-radius: 50%;
+            animation: spin 1s infinite ease;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* dark/light mode (default dark) */
+        body.light-mode {
+            background: #f0f2f5;
+            color: #1e1f2a;
+        }
+        body.light-mode .glass-card,
+        body.light-mode nav,
+        body.light-mode footer {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .theme-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e1f2a;
+            color: #cf7bb5;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 999;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .theme-toggle:hover { transform: scale(1.1); background: #cf7bb5; color: #0b0c10; }
+
+        /* glassmorphism base */
+        .glass-card, section, nav, footer {
+            background: rgba(20, 25, 35, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.6);
+        }
+
+        /* layout */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        section {
+            margin: 100px 0;
+            padding: 60px 30px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        h2 {
+            font-size: 2.8rem;
+            margin-bottom: 40px;
+            background: linear-gradient(145deg, #fff, #cf7bb5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* buttons */
+        .btn {
+            display: inline-block;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.25s ease;
+            margin-right: 15px;
+            border: 1px solid rgba(207,123,181,0.3);
+            background: rgba(20, 25, 35, 0.7);
+            backdrop-filter: blur(4px);
+            color: white;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+        }
+        .btn-primary {
+            background: #cf7bb5;
+            color: #0b0c10;
+            border: none;
+        }
+        .btn:hover {
+            transform: translateY(-5px);
+            border-color: #cf7bb5;
+            box-shadow: 0 15px 25px -8px #cf7bb5;
+        }
+
+        /* navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            margin-top: 20px;
+            border-radius: 80px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #cf7bb5, #a37cf4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            margin-left: 35px;
+            font-weight: 500;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+        .nav-links a:hover { border-bottom-color: #cf7bb5; }
+
+        /* hero typing effect */
+        .typed-text {
+            font-size: 2rem;
+            font-weight: 300;
+        }
+        #typed {
+            font-weight: 700;
+            color: #cf7bb5;
+            background: rgba(0,0,0,0.2);
+            padding: 0 8px;
+            border-radius: 12px;
+        }
+
+        /* animated progress bars */
+        .skill-item {
+            margin: 25px 0;
+        }
+        .skill-info { display: flex; justify-content: space-between; }
+        .progress-bar-bg {
+            height: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #cf7bb5, #a37cf4);
+            border-radius: 20px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.22, 0.97, 0.33, 1.1);
+        }
+
+        /* skills cards */
+        .skills-grid, .services-grid, .projects-grid, .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+        .skill-card, .service-card, .project-card, .testimonial-card {
+            background: rgba(15, 19, 28, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 30px 20px;
+            border-radius: 30px;
+            text-align: center;
+            border: 1px solid rgba(207,123,181,0.2);
+            transition: all 0.3s;
+        }
+        .skill-card:hover, .service-card:hover, .project-card:hover {
+            transform: scale(1.02) translateY(-8px);
+            border-color: #cf7bb5;
+            box-shadow: 0 30px 40px -20px #cf7bb5;
+        }
+        .circular-progress {
+            --size: 110px;
+            width: var(--size);
+            height: var(--size);
+            border-radius: 50%;
+            background: conic-gradient(#cf7bb5 0deg, #2d2f3b 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-weight: 700;
+            font-size: 22px;
+            transition: background 0.3s;
+        }
+        .circular-progress span { background: #0b0c10; padding: 15px 20px; border-radius: 50%; }
+
+        /* project filter */
+        .filter-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(207,123,181,0.3);
+            padding: 8px 22px;
+            border-radius: 40px;
+            color: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: #cf7bb5;
+            color: #0b0c10;
+            border-color: #cf7bb5;
+        }
+
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(207,123,181,0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+            border-radius: 30px;
+        }
+        .project-card:hover .overlay { opacity: 1; }
+
+        /* testimonial card slider (auto scroll) */
+        .testimonials-grid {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 30px;
+            padding: 20px 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #cf7bb5 #1e1f2a;
+        }
+        .testimonials-grid::-webkit-scrollbar { height: 6px; }
+        .testimonials-grid::-webkit-scrollbar-thumb { background: #cf7bb5; border-radius: 20px; }
+        .testimonial-card {
+            min-width: 300px;
+            scroll-snap-align: start;
+        }
+
+        /* contact form */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .contact-form input, .contact-form textarea {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(207,123,181,0.3);
+            border-radius: 60px;
+            padding: 18px 28px;
+            font-size: 1rem;
+            color: white;
+            outline: none;
+            transition: 0.2s;
+        }
+        .contact-form textarea { border-radius: 30px; resize: vertical; }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: #cf7bb5;
+            box-shadow: 0 0 20px #cf7bb5;
+        }
+
+        footer {
+            padding: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 50px 50px 0 0;
+            margin-top: 80px;
+        }
+        .scroll-top {
+            background: #cf7bb5;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0c10;
+            font-size: 24px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .scroll-top:hover { transform: translateY(-10px); }
+
+        /* scroll reveal (will be animated via JS) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* responsive */
+        @media (max-width: 900px) {
+            nav { flex-direction: column; gap: 15px; }
+            .nav-links a { margin: 0 15px; }
+            h2 { font-size: 2.2rem; }
+        }
+        @media (max-width: 600px) {
+            .btn { display: block; margin: 10px 0; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- custom cursor -->
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- theme toggle -->
+    <div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></div>
+
+    <!-- navigation -->
+    <div class="container">
+        <nav class="glass-card">
+            <span class="logo">MY.</span>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#services">Services</a>
+                <a href="#projects">Projects</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HERO section -->
+    <section id="home" class="container" style="min-height: 85vh; display: flex; align-items: center;">
+        <div class="hero-content" style="max-width: 800px;">
+            <p class="typed-text">I'm <span id="typed"></span></p>
+            <h1 style="font-size: 4rem; line-height: 1.1;">MD Yahiya<br><span style="font-size: 1.8rem; background: linear-gradient(145deg,#cf7bb5, #a37cf4); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Digital artisan & trainer</span></h1>
+            <p style="font-size: 1.3rem; margin: 30px 0;">Class 9 · Wazadia Kamil Madrasha · Bangladesh</p>
+            <div>
+                <a href="#" class="btn btn-primary">Hire Me</a>
+                <a href="#" class="btn">Contact Me</a>
+            </div>
+            <div style="margin-top: 40px; font-size: 28px; letter-spacing: 18px;">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-linkedin"></i>
+                <i class="fab fa-github"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT section -->
+    <section id="about" class="container reveal">
+        <h2>About Me</h2>
+        <div style="display: flex; gap: 50px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 260px;">
+                <div style="background: #2d2f3b; border-radius: 30px; height: 280px; display: flex; align-items: center; justify-content: center; border: 3px solid #cf7bb5;">📸 profile image placeholder</div>
+            </div>
+            <div style="flex: 2;">
+                <p style="font-size: 1.2rem; margin-bottom: 30px;">Nine-grader with a passion for digital creation. I blend design, video, and marketing to deliver premium results. Canva expert, video editor, and computer trainer. Quick learner, hard worker, always exploring new tech.</p>
+                <!-- animated progress bars -->
+                <div class="skill-item">
+                    <div class="skill-info"><span>Digital Marketing</span><span>88%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-fill" data-width="88"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-info"><span>Graphic Design (Canva)</span><span>96%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-fill" data-width="96"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-info"><span>Video Editing</span><span>91%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-fill" data-width="91"></div></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-info"><span>MS Office suite</span><span>94%</span></div>
+                    <div class="progress-bar-bg"><div class="progress-fill" data-width="94"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS section (circular cards) -->
+    <section id="skills" class="container reveal">
+        <h2>core expertise</h2>
+        <div class="skills-grid">
+            <div class="skill-card"><div class="circular-progress" data-percent="90"><span>90%</span></div><h3>Digital Marketing</h3></div>
+            <div class="skill-card"><div class="circular-progress" data-percent="98"><span>98%</span></div><h3>Canva design</h3></div>
+            <div class="skill-card"><div class="circular-progress" data-percent="92"><span>92%</span></div><h3>Video editing</h3></div>
+            <div class="skill-card"><div class="circular-progress" data-percent="95"><span>95%</span></div><h3>Computer skills</h3></div>
+            <div class="skill-card"><div class="circular-progress" data-percent="93"><span>93%</span></div><h3>Spoken English</h3></div>
+        </div>
+    </section>
+
+    <!-- SERVICES section -->
+    <section id="services" class="container reveal">
+        <h2>services i offer</h2>
+        <div class="services-grid">
+            <div class="service-card"><i class="fas fa-chart-line" style="font-size: 48px; color:#cf7bb5;"></i><h3>Digital Marketing</h3><p>SEO, social media & ads</p></div>
+            <div class="service-card"><i class="fas fa-paint-brush" style="font-size: 48px; color:#cf7bb5;"></i><h3>Graphic Design</h3><p>Canva expert, branding</p></div>
+            <div class="service-card"><i class="fas fa-video" style="font-size: 48px; color:#cf7bb5;"></i><h3>Video Editing</h3><p>cuts, effects, color</p></div>
+            <div class="service-card"><i class="fas fa-laptop-code" style="font-size: 48px; color:#cf7bb5;"></i><h3>Computer Training</h3><p>MS Office, basic skills</p></div>
+        </div>
+    </section>
+
+    <!-- PROJECTS gallery with filter -->
+    <section id="projects" class="container reveal">
+        <h2>recent work</h2>
+        <div class="filter-buttons">
+            <span class="filter-btn active" data-filter="all">All</span>
+            <span class="filter-btn" data-filter="design">Design</span>
+            <span class="filter-btn" data-filter="video">Video</span>
+            <span class="filter-btn" data-filter="marketing">Marketing</span>
+        </div>
+        <div class="projects-grid" id="projectsGrid">
+            <div class="project-card" data-category="design"><div class="overlay">Canva poster</div>🖼️ project 1</div>
+            <div class="project-card" data-category="video"><div class="overlay">edit reel</div>🎬 project 2</div>
+            <div class="project-card" data-category="marketing"><div class="overlay">campaign</div>📊 project 3</div>
+            <div class="project-card" data-category="design"><div class="overlay">logo</div>🎨 project 4</div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS slider -->
+    <section id="testimonials" class="container reveal">
+        <h2>client words</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">⭐⭐⭐⭐⭐ <br> "Yahiya's designs are top tier – very premium feel." – <strong>Rafiq</strong></div>
+            <div class="testimonial-card">⭐⭐⭐⭐⭐ <br> "Editing skills transformed my YouTube channel." – <strong>Nusrat</strong></div>
+            <div class="testimonial-card">⭐⭐⭐⭐ <br> "Excellent digital marketing sense. Highly recommended." – <strong>Tanvir</strong></div>
+            <div class="testimonial-card">⭐⭐⭐⭐⭐ <br> "Taught me Excel & PowerPoint in 2 days. Great trainer." – <strong>Shamim</strong></div>
+        </div>
+    </section>
+
+    <!-- CONTACT section -->
+    <section id="contact" class="container reveal">
+        <h2>let's connect</h2>
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+            <div style="flex:1; min-width:260px;">
+                <p><i class="fas fa-envelope"></i> yahiya.dev@example.com</p>
+                <p><i class="fas fa-phone"></i> +880 1234-567890</p>
+                <div style="font-size: 30px; margin: 20px 0;">
+                    <i class="fab fa-facebook"></i>  <i class="fab fa-instagram"></i>  <i class="fab fa-whatsapp"></i>
+                </div>
+            </div>
+            <div style="flex:2;">
+                <form class="contact-form">
+                    <input type="text" placeholder="Your name">
+                    <input type="email" placeholder="Email">
+                    <textarea rows="4" placeholder="Message"></textarea>
+                    <button class="btn btn-primary" style="border:none; cursor:pointer;">Send message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="container">
+        <div>© 2025 MD Yahiya · all premium</div>
+        <div class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></div>
+    </footer>
+
+    <!-- JavaScript: all animations, typing, progress, scrollreveal, cursor, preloader, darkmode, filter -->
+    <script>
+        (function() {
+            // preloader
+            window.addEventListener('load', () => {
+                document.getElementById('preloader').classList.add('hidden');
+            });
+
+            // custom cursor
+            const cursor = document.getElementById('cursor');
+            const follower = document.getElementById('cursorFollower');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                follower.style.left = e.clientX + 'px';
+                follower.style.top = e.clientY + 'px';
+            });
+
+            // typing effect (simulated)
+            const typedSpan = document.getElementById('typed');
+            const words = ['MD Yahiya', 'a designer', 'a video editor', 'a digital marketer', 'a trainer'];
+            let i = 0, j = 0, isDeleting = false;
+            function typeEffect() {
+                const current = words[i];
+                if (isDeleting) {
+                    typedSpan.textContent = current.substring(0, j-1);
+                    j--;
+                } else {
+                    typedSpan.textContent = current.substring(0, j+1);
+                    j++;
+                }
+                if (!isDeleting && j === current.length) { isDeleting = true; setTimeout(typeEffect, 1500); }
+                else if (isDeleting && j === 0) { isDeleting = false; i = (i+1) % words.length; setTimeout(typeEffect, 300); }
+                else setTimeout(typeEffect, 80);
+            }
+            typeEffect();
+
+            // progress bar fill (about) + circular progress
+            function fillProgressBars() {
+                document.querySelectorAll('.progress-fill').forEach(p => {
+                    const w = p.getAttribute('data-width');
+                    if (w) p.style.width = w + '%';
+                });
+                // circular progress
+                document.querySelectorAll('.circular-progress').forEach(c => {
+                    const percent = c.getAttribute('data-percent') || 0;
+                    const angle = (percent / 100) * 360;
+                    c.style.background = `conic-gradient(#cf7bb5 ${angle}deg, #2d2f3b ${angle}deg)`;
+                });
+            }
+
+            // scroll reveal (Intersection Observer)
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        if (entry.target.id === 'about') fillProgressBars();  // when about visible
+                        if (entry.target.id === 'skills') fillProgressBars(); 
+                    }
+                });
+            }, { threshold: 0.2 });
+            reveals.forEach(r => observer.observe(r));
+
+            // filter projects
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const projects = document.querySelectorAll('.project-card');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const filter = btn.dataset.filter;
+                    projects.forEach(p => {
+                        if (filter === 'all' || p.dataset.category === filter) p.style.display = 'block';
+                        else p.style.display = 'none';
+                    });
+                });
+            });
+
+            // dark mode toggle
+            const toggle = document.getElementById('themeToggle');
+            toggle.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                const icon = toggle.querySelector('i');
+                if (document.body.classList.contains('light-mode')) {
+                    icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
+                }
+            });
+
+            // smooth scroll to top
+            document.getElementById('scrollTop').addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // fill progress on page load if visible (for about)
+            if (document.getElementById('about').classList.contains('active')) fillProgressBars();
+
+            // micro-interactions: hover on social etc (just for demonstration)
+        })();
+    </script>
+    <!-- ensure progress bars fill after small delay (for any active section) -->
+    <script>
+        window.addEventListener('load', function() {
+            if (document.getElementById('about').getBoundingClientRect().top < window.innerHeight) {
+                document.querySelectorAll('.progress-fill').forEach(p => { let w = p.getAttribute('data-width'); if(w) p.style.width = w+'%'; });
+                document.querySelectorAll('.circular-progress').forEach(c => { let per = c.getAttribute('data-percent'); let angle = (per/100)*360; c.style.background = `conic-gradient(#cf7bb5 ${angle}deg, #2d2f3b ${angle}deg)`; });
+            }
+        });
+    </script>
+</body>
+</html>
